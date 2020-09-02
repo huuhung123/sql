@@ -1,0 +1,442 @@
+<!-- 
+  - DATABASE is a collection of data stored in a format that can easily be accessed. In order to manage our databases, we use a software application called database management system (DBMS)
+  - DBMS: RDBMS(SQL, MySQL, SQL Server, Oracle)  NoSQL (non- relational) don't understand SQL
+                    <-----------
+             CLIENT ----------- DBMS --------- DATABASE
+
+  - SQL(Structured Query language): NoSQL systems don't understand SQL
+-->
+
+<!-- 
+DROP TABLE (DATABASE) customers;
+show databases;
+CREATE DATABASE name -> USE name; SELECT database();
+
+CREATE TABLE table_name (
+    column1 datatype constraint,
+    column2 datatype constraint,    -> SHOW TABLES; -> SHOW COLUMNS FROM <tablename>; or DESC <tablename>; 
+    column3 datatype constraint,    DROP TABLE <tablename>;
+    ....
+);
+SHOW WARNINGS;
+
+CREATE TABLE unique_cats (cat_id INT NOT NULL
+                      ,name VARCHAR(100) 
+                      ,age INT
+                      ,PRIMARY KEY (cat_id));
+
+CREATE TABLE unique_cats2 (cat_id INT NOT NULL AUTO_INCREMENT
+                      ,name VARCHAR(100) 
+                      ,age INT
+                      ,PRIMARY KEY (cat_id));
+
+CREATE TABLE employees (
+    id INT NOT NULL AUTO_INCREMENT,
+    last_name VARCHAR(255) NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    middle_name VARCHAR(255),
+    age INTEGER NOT NULL,
+    current_status VARCHAR(100) NOT NULL DEFAULT 'employed',
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE employees (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    last_name VARCHAR(255) NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    middle_name VARCHAR(255),
+    age INTEGER NOT NULL,
+    current_status VARCHAR(100) NOT NULL DEFAULT 'employed'
+);
+
+INSERT INTO shippers (name) (CREATE)
+VALUES ('Shipper1'),
+       ('Shipper2'),
+       ('Shipper3')
+
+INSERT INTO cats(name, age) 
+VALUES ('Charlie', 10)
+      ,('Sadie', 3)
+      ,('Lazy Bear', 1);
+
+UPDATE cats SET breed='Shorthair' (UPDATE)
+WHERE breed='Tabby';  
+
+UPDATE cats SET age=14 
+WHERE name='Misty';
+
+DELETE FROM cats WHERE name='Egg'; (DELETE)
+DELETE FROM cats;
+
+
+SELECT
+  CONCAT(author_fname, ' ', author_lname) AS author,
+  MAX(pages) AS 'longest book'
+FROM books
+GROUP BY author_lname,
+         author_fname;
+
+CASE STATEMENT:
+
++-----------------------------------------------------+---------------+------------------+
+| title                                               | released_year | GENRE            |
++-----------------------------------------------------+---------------+------------------+
+| The Namesake                                        |          2003 | Modern Lit       |
+| Norse Mythology                                     |          2016 | Modern Lit       |
+| American Gods                                       |          2001 | Modern Lit       |
+| Interpreter of Maladies                             |          1996 | 20th Century Lit |
+| A Hologram for the King: A Novel                    |          2012 | Modern Lit       |
+| The Circle                                          |          2013 | Modern Lit       |
+| The Amazing Adventures of Kavalier & Clay           |          2000 | Modern Lit       |
+| Just Kids                                           |          2010 | Modern Lit       |
+| A Heartbreaking Work of Staggering Genius           |          2001 | Modern Lit       |
+| Coraline                                            |          2003 | Modern Lit       |
+| What We Talk About When We Talk About Love: Stories |          1981 | 20th Century Lit |
+| Where I'm Calling From: Selected Stories            |          1989 | 20th Century Lit |
+| White Noise                                         |          1985 | 20th Century Lit |
+| Cannery Row                                         |          1945 | 20th Century Lit |
+| Oblivion: Stories                                   |          2004 | Modern Lit       |
+| Consider the Lobster                                |          2005 | Modern Lit       |
+| 10% Happier                                         |          2014 | Modern Lit       |
+| fake_book                                           |          2001 | Modern Lit       |
+| Lincoln In The Bardo                                |          2017 | Modern Lit       |
++-----------------------------------------------------+---------------+------------------+
+
+SELECT title, released_year,
+       CASE 
+         WHEN released_year >= 2000 THEN 'Modern Lit'
+         ELSE '20th Century Lit'
+       END AS GENRE
+FROM books;   
+
+
+ONE:MANY
+
+CREATE TABLE customers(
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  first_name VARCHAR(100),
+  last_name VARCHAR(100),
+  email VARCHAR(100)
+)
+
+CREATE orders(
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  order_date  DATE,
+  amount  DECIMAL(8,2),
+  customer_id INT,
+  FOREIGN KEY(customer_id) REFERENCES customers(id)
+)
+-->
+
+<!-- 
+
+
+
+CREATE TABLE USING ANOTHER TABLE:
+CREATE TABLE new_table_name AS
+SELECT column1, column2,...
+FROM existing_table_name
+WHERE ....;
+CREATE TABLE tutorial.Student2 AS              CREATE TABLE tutorial.Student3 AS
+SELECT PersonID, LastName, Address             SELECT *
+FROM tutorial.persons;                         FROM tutorial.persons;
+
+SQL ALTER TABLE Statement is used to add, delete, or modify columns in an existing table, is also used to add and drop various constraints on an existing table.
+ALTER TABLE tutorial.persons               ALTER TABLE tutorial.persons
+ADD sex VARCHAR(20), ADD dob DATE;         DROP COLUMN dob, DROP COLUMN PersonID;
+ALTER TABLE tutorial.persons                           
+MODIFY COLUMN City varchar(100); (tu 255 -> 100);
+
+ALTER TABLE tutorial.student2                  ALTER TABLE tutorial.student2
+ADD PRIMARY KEY(PersonID, LastName);           DROP PRIMARY KEY 
+
+
+SELECT
+    last_name,
+    first_name,
+    points,
+    (points + 10) * 100 AS discount_factor
+FROM customers
+(WHERE NOT (birth_date > '1990-01-01') OR (points <> 1000 AND state = 'VA'))
+(WHERE state NOT IN ('VA', 'FL', 'GA'))
+(WHERE points NOT BETWEEN 1000 AND 3000)
+(WHERE last_name NOT LIKE '%ab%', 'a%', '%b', '___y', 'b___y')
+ -- % any number of characters
+ -- _ single character
+(WHERE phone IS NOT NULL)
+-->
+<!-- 
+SELECT *, quantity * unit_price AS total_price
+FROM order_items
+WHERE order_id = 2
+ORDER BY total_price DESC, ASC
+-->
+<!-- 
+SELECT *             -- page 1: 1 - 3   
+FROM customers       -- page 2: 4 - 6
+LIMIT 6, 3(7 - 9)     -- page 3: 7 - 9
+-->
+<!-- 
+SELECT order_id, o.customer_id, first_name, last_name
+FROM orders o
+JOIN customers c
+    ON o.customer_id = c.customer_id
+-->
+<!-- 
+USE sql_inventory
+
+SELECT *
+FROM sql_store.order_items oi
+JOIN products p
+    ON oi.product_id = p.product_id
+-->
+
+<!-- 
+
+-->
+<!-- 
+
+
+INSERT INTO orders_archived
+SELECT *
+FROM orders
+WHERE order_date < '2019-01-01'
+
+SQL DELETE Statement is used to delete existing records in a table.
+DELETE FROM table_name WHERE condition;  
+DELETE FROM Customers WHERE CustomerName='Alfreds Futterkiste';
+
+The SQL SELECT DISTINCT Statement is used to return only distinct (different) values.Inside a table, a column often contains many duplicate values; and sometimes you only want to list the different (distinct) values.
+SELECT DISTINCT column1, column2, ...
+FROM table_name;
+SELECT DISTINCT Country FROM Customers;
+SELECT COUNT(DISTINCT Country) FROM Customers;
+
+
+The SQL UPDATE Statement is used to modify the existing records in a table.
+UPDATE table_name                              UPDATE Customers
+SET column1 = value1, column2 = value2, ...    SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
+WHERE condition;                               WHERE CustomerID IN (1, 2, 3)(SELECT customer_id FROM customers WHERE points > 3000) = (SELECT * FROM clients WHERE name = 'Myworks') - SUBQUERY
+Câu lệnh dưới đây cho biết danh sách các môn học có số đơn vị học trình lớn hơn hoặc bằng số đơn vị học trình của môn học có mã là TI-001
+SELECT *
+FROM monhoc
+WHERE sodvht>=(SELECT sodvht FROM monhoc WHERE mamonhoc='TI-001')
+
+                                               
+
+SQL MIN(), MAX() FUNCTIONS
+  - The MIN() function returns the smallest value of the selected column.
+  - The MAX() function returns the largest value of the selected column.
+SELECT MIN(MAX)(column_name) SELECT MIN(Price) AS SmallestPrice, MAX(Price) AS BiggestPrice 
+FROM table_name              FROM Products;
+WHERE condition;
+
+SQL COUNT(), AVG(), SUM() FUNCTIONS
+  - The COUNT() function returns the number of rows that matches a specified criteria.
+  - The AVG() function returns the average value of a numeric column.
+  - The SUM() function returns the total sum of a numeric column.
+SELECT COUNT(AVG, SUM)(column_name)   SELECT COUNT(FirstName) FROM person WHERE FirstName LIKE '%h%'
+FROM table_name                       SELECT COUNT(*) FROM;  
+WHERE condition;                      SELECT AVG(Age) FROM Person WHERE Age > 40;
+
+The following SQL statement selects all customers that are from the same countries as the suppliers:
+SELECT * FROM Customers
+WHERE Country IN (SELECT Country FROM Suppliers);
+
+
+<!--
+SQL CONSTRAINTS are used to specify rules for data in a table.Constraints are used to limit the type of data that can go into a table. This ensures the accuracy and reliability of the data in the table. If there is any violation between the constraint and the data action, the action is aborted.Constraints can be column level or table level. Column level constraints apply to a column, and table level constraints apply to the whole table.
+
+The following constraints are commonly used in SQL:
+  - NOT NULL - Ensures that a column cannot have a NULL value
+  - UNIQUE - Ensures that all values in a column are different
+  - PRIMARY KEY - A combination of a NOT NULL and UNIQUE. Uniquely identifies each row in a table
+  - FOREIGN KEY - Uniquely identifies a row/record in another table
+  - CHECK - Ensures that all values in a column satisfies a specific condition
+  - DEFAULT - Sets a default value for a column when no value is specified
+  - INDEX - Used to create and retrieve data from the database very quickly
+
+
+
+
+SQL AUTO INCREMENT Field
+
+SQL PRIMARY KEY Constraint
+[CONSTRAINT tên_ràng_buộc] PRIMARY KEY [(danh_sách_cột)]
+
+CREATE TABLE diemthi
+(
+  mamonhoc NVARCHAR(10) NOT NULL ,
+  masv NVARCHAR(10) NOT NULL ,
+  [CONSTRAINT pk_diemthi] PRIMARY KEY(mamonhoc,masv)
+)
+
+
+- NOTE: LIKE is case-sensitive, ILIKE is case-insensitive
+- SELCT columns must either have an agregate func or be in the GROUP BY call, WHERE should not refer to the aggregation result, later on we will learn to use HAVING to filter on those results. If you want to sort results based o the aggregate, make sure to refernce the entire func.
+EX: SELECT company, SUM(sales)
+    FROM finance_table
+    GROUP BY company
+    ORDER BY SUM(sales)
+    LIMIY 5 
+
+- HAVING: We can not use WHERE to filter based off of aggregate results, because those happen after a WHERE is executed. HAVING allows us to use the aggregate results as a filter along with a GROUP BY
+EX: SELECT company, SUM(sales)
+    FROM finance_table
+    WHERE company != 'Google'
+    GROUP BY company
+    HAVING SUM(sales) > 1000
+-->
+
+<!-- 
+JOIN: allow us to combine multiple tables together
+ - INNER JOINS
+ - OUTER JOINS (LEFT (OUTER) JOIN, RIGHT (OUTER) JOIN, FULL OUTER JOIN)
+ - UNIONS
+
+- AS: allows us to create an "alias" for a column or result, we can not use the ALIAS inside a WHERE operator.
+EX: SELECT customer_id, SUM(amount) AS total_spent
+FROM payment
+GROUP BY customer_id
+HAVING SUM(amount) (!= total_spent) > 100
+
+- INNER JOINS: will result with the set of records that match in both tables
+SYNTAX: SELECT * FROM TableA(Registrions)
+        INNER JOIN TableB(Logins)
+        ON TableA.col_match(Registions.name) = TableB.col_match(LOgins.name)
+
+- FULL OUTER JOINS
+SYNTAX: SELECT * FROM TableA(Registrations)
+        FULL OUTER JOIN TableB(Logins)
+        ON TableA.col_match(Registrations.name) = TableB.col_match(Logins.name)
+
+- FULL OUTER JOINS with WHERE: Get rows unique to either table(rows not found in both tables)       
+SYNTAX: SELECT * FROM TableA(Registrations)
+        FULL OUTER JOIN TableB(Logins)
+        ON TableA.col_match(Registrations.name) = TableB.col_match(Logins.name)
+        WHERE TableA.id(Registrations.reg_id) IS null OR TableB.id(Logins.log_id) IS null
+
+- LEFT (OUTER) JOIN: results in the set of records that are in the left table, if there is no match with the right table, the results are null.
+SYNTAX: SELECT * FROM TableA
+        LEFT (OUTER) JOIN TableB
+        ON TableA.col_match = TableB.com_match
+
+        SELECT * FROM TableA(Registrations)
+        LEFT (OUTER) JOIN TableB(Logins)
+        ON TableA.col_match(Registrations.name) = TableB.com_match(Logins.name)
+        WHERE TableB.id(Logins.log_id) IS null
+
+- RIGHT (OUTER) JOIN: essentially the same as a LEFT JOIN, except the tables are switched.
+SYNTAX: SELECT * FROM TableA
+        LEFT (OUTER) JOIN TableB
+        ON TableA.col_match = TableB.com_match
+        WHERE TableA.id IS null.
+
+- UNION: is used to combine the result-set of two or more SELECT statements. 
+SYNTAX: SELECT column_name(s) FROM table1
+        UNION
+        SELECT column_name(s) FROM table2
+-->
+
+<!-- 
+SUB-QUERY: allows you to construct complex queries, essentially performing a query on the results of another quey, the syntax is straightgorward and involves two SELECT statements.
+EX: How can we get a list of students who scored better than the average grade, first get the average grade, then compare the rest of the table against it.
+  SELECT student, grade
+  FROM test_scores
+  WHERE grade > (SELECT AVG(grade) FROM test_scores)
+
+- The subquery is performed first since it is inside the parenthesis. We can also use the IN operator in conjunction with a subquey to check against multiple results returned.
+EX:  SELECT student, grade
+     FROM test_scores
+     WHERE student IN (SELECT student FROM honor_roll_table)
+
+     SLECT film_id, title
+     FROM film
+     WHERE film_id IN
+     (SELECT inventory, film_id
+     FROM rental
+     INNER JOIN inventory ON inventory.inventory_id = rental.inventory_id
+     WHERE return_date BETWEEN '2005-05-29' AND '2005-05-30')
+     ORDER BY film_id
+
+- The EXISTS operator is used to test for existence of rows in a subquery. Typically a subquery is passed in the EXISTS() function to check if any rows are returned with the subquery.
+SYNTAX:   SELECT column_name
+          FROM table_name
+          WHERE EXISTS
+          (SELECT column_name FROM table_name WHERE condition)
+EX: SELECT first_name, last_name
+    FROM customer AS c
+    WHERE EXISTS
+    (SELECT * FROM payment as p
+    WEHERE p.customer_id = c.customer_id
+    AND amount > 11)
+-->
+
+<!-- 
+SELF-JOIN: is a query in which a table is joined to itself. Are useful for comparing values in a column of rows within the same table.
+SYNTAX: SELECT tableA.col(emp.name), tableB.col(report.name)
+        FROM table(employees) AS tableA(emp)
+        JOIN table(employees) AS tableB(report) ON
+        tableA.some_col(emp.emp_id) = tableB.other_col(report.report_id)
+-->
+
+<!--
+PRIMARY KEY: is a column or a group of columns used to identify a row uniquely in a table. Are also important since they allow us to easily discern what columns should be used for joining tables together.
+FOREIGN KEY: is a field or group of fields in a table that uniquely identifies a row in another table. Is defined in a table that references to the primary key of the other table. The table that contains the foreign key is called referencing table or child table. The table to which thee foreign key references is called referenced table or parent table. A table can have multiple foreign keys depending on its relationships with other tables. Rcall payment table, each payment row had its unique payment_id(PK) and identified the customer that made the payment through the customer_id(FK since it references the customer table's PK)
+-->
+
+<!-- 
+CONSTRAINTS:
+- Column constraints: Contrains the data in a column to adhere to certain conditions.
+  + NOT NULL: Ensures that a column cannot have NULL value.
+  + UNIQUE: Ensures that all values in a column are different
+  + PK: Uniquely identifies each row/record in a DB table.
+  + FK: Constrains data based on columns in other tables.
+  + CHECK: Ensures that all values in a column satisfy certain conditions.
+  + EXCLUSION:
+- Table constraints: applied to the entire table rather than to an individual column
+  + CHECK: to check a condition when inserting or updating data.
+  + REFERENCES: to constrain the value stored in the column that must exist in a column in another table.
+  + UNIQUE(column_list): forces te values stored in the columns listed inside the parentheses to be unique.
+  + PK(column_list): allows you to define the PK that consists of multipe columns.
+-->
+
+<!-- 
+CREATE: CREATE TABLE table_name {
+    column_name TYPE column_constraint,
+    column_name TYPE column_constraint,
+    table_constraint table_constraint
+} INHERITS existing_table_name
+-->
+
+<!-- 
+DROP: allows for the complere removal of a column in a table. In PostgreSQL this will also automatically remove all of its indexes and constraints involving the column. However, it will not remove columns used in views, triggers, or stored procedures without the additional CASCADE clause.
+SYNTAX:   ALTER TABLE table_name
+          DROP COLUMN col_name
+          (DROP COLUMN col_name CASCADE)
+          (DROP COLUMN IF EXISTS col_name)
+
+ALTER: allows for changes to an existing table structure, such as:
+  - Adding, dropping, or renaming columns
+  - Changing a column's data type
+  - Set DEFAULT values for a column
+  - Add CHECK constraints
+  - Rename table
+
+EX: ALTER TABLE table_name
+    ADD COLUMN new_col TYPE
+
+    ALTER TABLE table_name
+    ALTER COLUMN column_name
+    ADD CONSTRAINT constraint_name
+
+DELETE: remove rows from a table
+EX:  DELETE FROM table
+     WHERE row_id = 1 
+
+    DELETE FROM TABLE
+
+     DELETE FROM tableA
+     USING tableB
+     WHERE tableA.id = tableB.id
+-->
